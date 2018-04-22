@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:audioplayer/audioplayer.dart';
+import 'package:meta/meta.dart';
 
 void main() => runApp(new MyApp());
 
@@ -29,8 +31,55 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  AudioPlayer audioPlayer;
+  bool isPlaying = false;
+  Duration length;
+  Duration position;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // http://www.purple-planet.com/motivation/4594265886
+    audioPlayer = new AudioPlayer()
+//      ..play('https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3')
+//      ..play('https://cd7.ytbapi.com/download.php?q=0a4115a5d8aaaafa3dc1658b910e3d15.mp3')
+//      ..play('https://api.soundcloud.com/tracks/295692063/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P')
+//      ..play('https://api.soundcloud.com/tracks/9540352/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P')
+//      ..play('https://api.soundcloud.com/tracks/9540779/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P')
+//      ..play('https://api.soundcloud.com/tracks/260578593/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P')
+      ..play('https://api.soundcloud.com/tracks/258735531/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P')
+      ..setStartHandler(() {
+        print('Started');
+        setState(() => this.isPlaying = true);
+      })
+//      ..setPauseHandler(() {
+//        print('Paused');
+//        setState(() => this.isPlaying = false);
+//      })
+      ..setDurationHandler((Duration length) {
+        print('Duration: $length');
+        setState(() => this.length = length);
+      })
+      ..setPositionHandler((Duration position) {
+        print('Position: $position');
+        setState(() => this.position = position);
+      })
+      ..setCompletionHandler(() {
+        print('Completed');
+      })
+      ..setErrorHandler((String error) {
+        print('Error: $error');
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
+    var progress = 0.0;
+    if (length != null && position != null) {
+      progress = position.inMilliseconds / length.inMilliseconds;
+    }
+
     return new Scaffold(
       backgroundColor: Colors.white,
       appBar: new AppBar(
@@ -62,13 +111,18 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           new Expanded(
             child: new Center(
-              child: new TrackSeekWithAlbumArt(),
+              child: new TrackSeekWithAlbumArt(
+                progress: progress,
+              ),
             ),
           ),
 
           new AudioWaves(),
 
-          new TitleAndControls(),
+          new TitleAndControls(
+            audioPlayer: audioPlayer,
+            isPlaying: isPlaying,
+          ),
         ],
       ),
     );
@@ -77,11 +131,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class TrackSeekWithAlbumArt extends StatelessWidget {
 
+  final double progress;
+
+  TrackSeekWithAlbumArt({
+    this.progress = 0.0,
+  });
+
   Widget _trackSeeker(Widget centerContent) {
     return new Container(
       child: new CustomPaint(
         painter: new CircleTrackPainter(
-          progress: 0.17,
+          progress: progress,
           trackColor: const Color(0xFFEEEEEE),
           trackWidth: 3.0,
           progressColor: accentColor,
@@ -181,7 +241,6 @@ class CircleTrackPainter extends CustomPainter {
 class CircleClipper extends CustomClipper<Rect> {
   @override
   Rect getClip(Size size) {
-    print('Size: $size');
     return new Rect.fromCircle(
       center: new Offset(size.width / 2, size.height / 2),
       radius: min(size.width / 2, size.height / 2),
@@ -215,6 +274,15 @@ class AlbumArtCircle extends StatelessWidget {
 
 
 class TitleAndControls extends StatelessWidget {
+
+  final AudioPlayer audioPlayer;
+  final bool isPlaying;
+
+  TitleAndControls({
+    @required this.audioPlayer,
+    this.isPlaying = false,
+  });
+
   @override
   Widget build(BuildContext context) {
     return new Material(
@@ -281,12 +349,16 @@ class TitleAndControls extends StatelessWidget {
                     padding: const EdgeInsets.all(4.0),
                     child: new IconButton(
                       icon: new Icon(
-                        Icons.play_arrow,
+                        isPlaying ? Icons.pause : Icons.play_arrow,
                         color: darkAccentColor,
                         size: 35.0,
                       ),
                       onPressed: () {
-                        // TODO:
+                        if (isPlaying) {
+                          audioPlayer.pause();
+                        } else {
+
+                        }
                       },
                     ),
                   ),

@@ -1,6 +1,8 @@
 <component name="libraryTable">
   <library name="Flutter Plugins" type="FlutterPluginsLibraryType">
-    <CLASSES />
+    <CLASSES>
+      <root url="file://$USER_HOME$/.pub-cache/git/audioplayer-564699e381ffe3c563863cc2302b344634e1d214" />
+    </CLASSES>
     <JAVADOC />
     <SOURCES />
   </library>

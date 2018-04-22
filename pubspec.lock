@@ -22,6 +22,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.6"
+  audioplayer:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "564699e381ffe3c563863cc2302b344634e1d214"
+      url: "git://github.com/matthew-carroll/audioplayer.git"
+    source: git
+    version: "0.4.0"
   barback:
     dependency: transitive
     description:
