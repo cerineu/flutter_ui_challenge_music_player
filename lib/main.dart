@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:audioplayer/audioplayer.dart';
+import 'package:fluttery_audio/fluttery_audio.dart';
 import 'package:meta/meta.dart';
 
 void main() => runApp(new MyApp());
@@ -31,99 +31,80 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  AudioPlayer audioPlayer;
-  bool isPlaying = false;
-  Duration length;
-  Duration position;
-
   @override
   void initState() {
     super.initState();
 
     // http://www.purple-planet.com/motivation/4594265886
-    audioPlayer = new AudioPlayer()
 //      ..play('https://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3')
 //      ..play('https://cd7.ytbapi.com/download.php?q=0a4115a5d8aaaafa3dc1658b910e3d15.mp3')
 //      ..play('https://api.soundcloud.com/tracks/295692063/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P')
 //      ..play('https://api.soundcloud.com/tracks/9540352/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P')
 //      ..play('https://api.soundcloud.com/tracks/9540779/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P')
 //      ..play('https://api.soundcloud.com/tracks/260578593/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P')
-      ..play('https://api.soundcloud.com/tracks/258735531/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P')
-      ..setStartHandler(() {
-        print('Started');
-        setState(() => this.isPlaying = true);
-      })
-//      ..setPauseHandler(() {
-//        print('Paused');
-//        setState(() => this.isPlaying = false);
-//      })
-      ..setDurationHandler((Duration length) {
-        print('Duration: $length');
-        setState(() => this.length = length);
-      })
-      ..setPositionHandler((Duration position) {
-        print('Position: $position');
-        setState(() => this.position = position);
-      })
-      ..setCompletionHandler(() {
-        print('Completed');
-      })
-      ..setErrorHandler((String error) {
-        print('Error: $error');
-      });
+//      ..play('https://api.soundcloud.com/tracks/258735531/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P')
   }
 
   @override
   Widget build(BuildContext context) {
-    var progress = 0.0;
-    if (length != null && position != null) {
-      progress = position.inMilliseconds / length.inMilliseconds;
-    }
-
-    return new Scaffold(
-      backgroundColor: Colors.white,
-      appBar: new AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        leading: new IconButton(
-          icon: new Icon(
-            Icons.arrow_back_ios,
-          ),
-          color: Colors.grey,
-          onPressed: () {
-            // TODO:
-          },
-        ),
-        title: new Text(''),
-        actions: [
-          new IconButton(
+    return new Audio(
+      audioUrl: 'https://api.soundcloud.com/tracks/260578593/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P',
+      playbackState: PlaybackState.playing,
+      child: new Scaffold(
+        backgroundColor: Colors.white,
+        appBar: new AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          leading: new IconButton(
             icon: new Icon(
-              Icons.menu,
+              Icons.arrow_back_ios,
             ),
             color: Colors.grey,
             onPressed: () {
               // TODO:
             },
           ),
-        ],
-      ),
-      body: new Column(
-        children: <Widget>[
-          new Expanded(
-            child: new Center(
-              child: new TrackSeekWithAlbumArt(
-                progress: progress,
+          title: new Text(''),
+          actions: [
+            new IconButton(
+              icon: new Icon(
+                Icons.menu,
+              ),
+              color: Colors.grey,
+              onPressed: () {
+                // TODO:
+              },
+            ),
+          ],
+        ),
+        body: new Column(
+          children: <Widget>[
+            new Expanded(
+              child: new Center(
+                child: new AudioComponent(
+                  updateMe: [
+                    WatchableAudioProperties.audioPlayhead,
+                    WatchableAudioProperties.audioLength,
+                  ],
+                  playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
+                    double progress = 0.0;
+                    if (player.audioLength != null && player.position != null) {
+                      progress = player.position.inMilliseconds / player.audioLength.inMilliseconds;
+                    }
+
+                    return new TrackSeekWithAlbumArt(
+                      progress: progress,
+                    );
+                  },
+                ),
               ),
             ),
-          ),
 
-          new AudioWaves(),
+            new AudioWaves(),
 
-          new TitleAndControls(
-            audioPlayer: audioPlayer,
-            isPlaying: isPlaying,
-          ),
-        ],
+            new TitleAndControls(),
+          ],
+        ),
       ),
     );
   }
@@ -275,13 +256,7 @@ class AlbumArtCircle extends StatelessWidget {
 
 class TitleAndControls extends StatelessWidget {
 
-  final AudioPlayer audioPlayer;
-  final bool isPlaying;
-
-  TitleAndControls({
-    @required this.audioPlayer,
-    this.isPlaying = false,
-  });
+  TitleAndControls();
 
   @override
   Widget build(BuildContext context) {
@@ -338,34 +313,45 @@ class TitleAndControls extends StatelessWidget {
                   },
                 ),
                 new Expanded(child: new Container()),
-                new RawMaterialButton(
-                  shape: new CircleBorder(),
-                  fillColor: Colors.white,
-                  splashColor: lightAccentColor,
-                  highlightColor: lightAccentColor.withAlpha(0x88),
-                  elevation: 10.0,
-                  highlightElevation: 5.0,
-                  child: new Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: new IconButton(
-                      icon: new Icon(
-                        isPlaying ? Icons.pause : Icons.play_arrow,
-                        color: darkAccentColor,
-                        size: 35.0,
-                      ),
-                      onPressed: () {
-                        if (isPlaying) {
-                          audioPlayer.pause();
-                        } else {
 
-                        }
-                      },
-                    ),
-                  ),
-                  onPressed: () {
-                    // TODO:
+                new AudioComponent(
+                  updateMe: [
+                    WatchableAudioProperties.audioPlayerState,
+                  ],
+
+                  playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
+                    IconData icon;
+                    Function onPressed;
+                    if (player.state == AudioPlayerState.playing) {
+                      icon = Icons.pause;
+                      onPressed = player.pause;
+                    } else if (player.state == AudioPlayerState.paused) {
+                      icon = Icons.play_arrow;
+                      onPressed = player.play;
+                    } else {
+                      icon = Icons.audiotrack;
+                    }
+
+                    return new RawMaterialButton(
+                      shape: new CircleBorder(),
+                      fillColor: Colors.white,
+                      splashColor: lightAccentColor,
+                      highlightColor: lightAccentColor.withAlpha(0x88),
+                      elevation: 10.0,
+                      highlightElevation: 5.0,
+                      onPressed: onPressed,
+                      child: new Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: new Icon(
+                          icon,
+                          color: darkAccentColor,
+                          size: 35.0,
+                        ),
+                      ),
+                    );
                   },
                 ),
+
                 new Expanded(child: new Container()),
                 new IconButton(
                   splashColor: lightAccentColor,
