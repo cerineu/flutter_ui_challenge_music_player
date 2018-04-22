@@ -45,80 +45,73 @@ class _MyHomePageState extends State<MyHomePage> {
 //      ..play('https://api.soundcloud.com/tracks/258735531/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P')
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildAudioAroundContent(Widget content) {
     return new Audio(
-      audioUrl: 'https://api.soundcloud.com/tracks/260578593/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P',
-      playbackState: PlaybackState.playing,
-      child: new Scaffold(
-        backgroundColor: Colors.white,
-        appBar: new AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          leading: new IconButton(
+        audioUrl: 'https://api.soundcloud.com/tracks/260578593/stream?secret_token=s-tj3IS&client_id=LBCcHmRB8XSStWL6wKH2HPACspQlXg2P',
+        playbackState: PlaybackState.playing,
+        child: content,
+    );
+  }
+
+  Widget _buildScaffoldAroundContent(Widget content) {
+    return new Scaffold(
+      backgroundColor: Colors.white,
+      appBar: new AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        leading: new IconButton(
+          icon: new Icon(
+            Icons.arrow_back_ios,
+          ),
+          color: Colors.grey,
+          onPressed: () {
+            // TODO:
+          },
+        ),
+        title: new Text(''),
+        actions: [
+          new IconButton(
             icon: new Icon(
-              Icons.arrow_back_ios,
+              Icons.menu,
             ),
             color: Colors.grey,
             onPressed: () {
               // TODO:
             },
           ),
-          title: new Text(''),
-          actions: [
-            new IconButton(
-              icon: new Icon(
-                Icons.menu,
-              ),
-              color: Colors.grey,
-              onPressed: () {
-                // TODO:
-              },
-            ),
-          ],
-        ),
-        body: new Column(
-          children: <Widget>[
-            new Expanded(
-              child: new Center(
-                child: new AudioComponent(
-                  updateMe: [
-                    WatchableAudioProperties.audioPlayhead,
-                    WatchableAudioProperties.audioLength,
-                  ],
-                  playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
-                    double progress = 0.0;
-                    if (player.audioLength != null && player.position != null) {
-                      progress = player.position.inMilliseconds / player.audioLength.inMilliseconds;
-                    }
+        ],
+      ),
+      body: content,
+    );
+  }
 
-                    return new TrackSeekWithAlbumArt(
-                      progress: progress,
-                    );
-                  },
+  @override
+  Widget build(BuildContext context) {
+    return _buildAudioAroundContent(
+        _buildScaffoldAroundContent(
+          new Column(
+            children: <Widget>[
+              new Expanded(
+                child: new Center(
+                  child: new TrackSeekWithAlbumArt()
                 ),
               ),
-            ),
 
-            new AudioWaves(),
+              new AudioWaves(),
 
-            new TitleAndControls(),
-          ],
-        ),
-      ),
+              new TitleAndControls(),
+            ],
+          ),
+        )
     );
   }
 }
 
 class TrackSeekWithAlbumArt extends StatelessWidget {
 
-  final double progress;
+  TrackSeekWithAlbumArt();
 
-  TrackSeekWithAlbumArt({
-    this.progress = 0.0,
-  });
-
-  Widget _trackSeeker(Widget centerContent) {
+  Widget _trackSeeker(double progress, Widget centerContent) {
     return new Container(
       child: new CustomPaint(
         painter: new CircleTrackPainter(
@@ -137,25 +130,39 @@ class TrackSeekWithAlbumArt extends StatelessWidget {
   }
 
   Widget _albumArt() {
-    return new Container(
-      width: 125.0,
-      height: 125.0,
-      child: new ClipOval(
-        clipper: new CircleClipper(),
-        child: new Image.network(
-          'https://i1.sndcdn.com/artworks-000165346750-e36z3a-t500x500.jpg',
-          width: 125.0,
-          height: 125.0,
-          colorBlendMode: BlendMode.softLight,
-          color: Colors.white,
+      return new Container(
+        width: 125.0,
+        height: 125.0,
+        child: new ClipOval(
+          clipper: new CircleClipper(),
+          child: new Image.network(
+            'https://i1.sndcdn.com/artworks-000165346750-e36z3a-t500x500.jpg',
+            width: 125.0,
+            height: 125.0,
+            colorBlendMode: BlendMode.softLight,
+            color: Colors.white,
+          ),
         ),
-      ),
-    );
+      );
   }
 
   @override
   Widget build(BuildContext context) {
-    return _trackSeeker(_albumArt());
+    return new AudioComponent(
+        updateMe: [
+          WatchableAudioProperties.audioPlayhead,
+          WatchableAudioProperties.audioLength,
+        ],
+        playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
+          double progress = 0.0;
+          if (player.audioLength != null && player.position != null) {
+            progress =
+                player.position.inMilliseconds / player.audioLength.inMilliseconds;
+          }
+
+          return _trackSeeker(progress, _albumArt());
+        }
+    );
   }
 }
 
