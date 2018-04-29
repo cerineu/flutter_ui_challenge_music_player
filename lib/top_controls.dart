@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:fluttery/gestures.dart';
 import 'package:fluttery_audio/fluttery_audio.dart';
 import 'package:meta/meta.dart';
-import 'package:music_player/songs.dart';
 import 'package:music_player/theme.dart';
 
 class AudioRadialSeekBar extends StatefulWidget {
 
-  AudioRadialSeekBar();
+  final String albumArtUrl;
+
+  AudioRadialSeekBar({
+    this.albumArtUrl,
+  });
 
   @override
   AudioRadialSeekBarState createState() {
@@ -48,7 +51,7 @@ class AudioRadialSeekBarState extends State<AudioRadialSeekBar> {
           child: new Container(
             color: accentColor,
             child: new Image.network(
-              demoPlaylist.songs[0].albumArtUrl,
+              widget.albumArtUrl,
               fit: BoxFit.cover,
             ),
           ),

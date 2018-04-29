@@ -65,15 +65,25 @@ class _MusicPlayerState extends State<MusicPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return new Audio(
-      audioUrl: demoPlaylist.songs[0].audioUrl,
+    return new AudioPlaylist(
+      playlist: demoPlaylist.songs.map((DemoSong song) {
+        return song.audioUrl;
+      }).toList(growable: false),
       playbackState: PlaybackState.paused,
       child: new Center(
         child: new Column(
           children: <Widget>[
             // Seek bar and album art
             new Expanded(
-              child: new AudioRadialSeekBar(),
+              child: new AudioPlaylistComponent(
+                playlistBuilder: (BuildContext context, Playlist playlist, Widget child) {
+                  String albumArtUrl = demoPlaylist.songs[playlist.activeIndex].albumArtUrl;
+
+                  return new AudioRadialSeekBar(
+                    albumArtUrl: albumArtUrl,
+                  );
+                },
+              ),
             ),
 
             // Visualizer

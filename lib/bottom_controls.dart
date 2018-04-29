@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttery_audio/fluttery_audio.dart';
+import 'package:music_player/songs.dart';
 import 'package:music_player/theme.dart';
 
 class BottomControls extends StatelessWidget {
@@ -15,32 +16,40 @@ class BottomControls extends StatelessWidget {
           child: new Column(
             children: <Widget>[
               // Song title and artist name
-              new RichText(
-                text: new TextSpan(
-                    text: '',
-                    children: [
-                      new TextSpan(
-                        text: 'Song Title\n',
-                        style: new TextStyle(
-                          color: Colors.white,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 4.0,
-                          height: 1.5,
-                        ),
-                      ),
-                      new TextSpan(
-                        text: 'Artist Name',
-                        style: new TextStyle(
-                          color: Colors.white.withAlpha(0xAA),
-                          fontSize: 12.0,
-                          letterSpacing: 3.0,
-                          height: 1.5,
-                        ),
-                      ),
-                    ]
-                ),
-                textAlign: TextAlign.center,
+              new AudioPlaylistComponent(
+                playlistBuilder: (BuildContext context, Playlist playlist, Widget child) {
+                  print("Building song title. Active index: ${playlist.activeIndex}");
+                  final songTitle = demoPlaylist.songs[playlist.activeIndex].songTitle;
+                  final artistName = demoPlaylist.songs[playlist.activeIndex].artist;
+
+                  return new RichText(
+                    text: new TextSpan(
+                        text: '',
+                        children: [
+                          new TextSpan(
+                            text: '${songTitle.toUpperCase()}\n',
+                            style: new TextStyle(
+                              color: Colors.white,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 4.0,
+                              height: 1.5,
+                            ),
+                          ),
+                          new TextSpan(
+                            text: '${artistName.toUpperCase()}',
+                            style: new TextStyle(
+                              color: Colors.white.withAlpha(0xAA),
+                              fontSize: 12.0,
+                              letterSpacing: 3.0,
+                              height: 1.5,
+                            ),
+                          ),
+                        ]
+                    ),
+                    textAlign: TextAlign.center,
+                  );
+                },
               ),
 
               new Padding(
@@ -118,16 +127,18 @@ class PlayPauseButton extends StatelessWidget {
 class PreviousButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new IconButton(
-      splashColor: lightAccentColor,
-      highlightColor: Colors.transparent,
-      icon: new Icon(
-        Icons.skip_previous,
-        color: Colors.white,
-        size: 35.0,
-      ),
-      onPressed: () {
-        // TODO:
+    return new AudioPlaylistComponent(
+      playlistBuilder: (BuildContext context, Playlist playlist, Widget child) {
+        return new IconButton(
+          splashColor: lightAccentColor,
+          highlightColor: Colors.transparent,
+          icon: new Icon(
+            Icons.skip_previous,
+            color: Colors.white,
+            size: 35.0,
+          ),
+          onPressed: playlist.previous,
+        );
       },
     );
   }
@@ -136,16 +147,18 @@ class PreviousButton extends StatelessWidget {
 class NextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new IconButton(
-      splashColor: lightAccentColor,
-      highlightColor: Colors.transparent,
-      icon: new Icon(
-        Icons.skip_next,
-        color: Colors.white,
-        size: 35.0,
-      ),
-      onPressed: () {
-        // TODO:
+    return new AudioPlaylistComponent(
+      playlistBuilder: (BuildContext context, Playlist playlist, Widget child) {
+        return new IconButton(
+          splashColor: lightAccentColor,
+          highlightColor: Colors.transparent,
+          icon: new Icon(
+            Icons.skip_next,
+            color: Colors.white,
+            size: 35.0,
+          ),
+          onPressed: playlist.next,
+        );
       },
     );
   }

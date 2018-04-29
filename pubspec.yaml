@@ -11,7 +11,7 @@ dependencies:
 
   fluttery: 0.0.5
 
-  fluttery_audio: 0.0.1
+  fluttery_audio: 0.0.3
 
 dev_dependencies:
   flutter_test:
