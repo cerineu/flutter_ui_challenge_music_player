@@ -100,10 +100,17 @@
             </list>
           </value>
         </entry>
+        <entry key="fluttery">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/fluttery-0.0.3/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="fluttery_audio">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/git/fluttery_audio-bd75ab83f360920337cdecf00cb5eb994a100f15/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/fluttery_audio-0.0.1/lib" />
             </list>
           </value>
         </entry>
@@ -404,7 +411,6 @@
       </option>
     </properties>
     <CLASSES>
-      <root url="file://$USER_HOME$/.pub-cache/git/fluttery_audio-bd75ab83f360920337cdecf00cb5eb994a100f15/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/analyzer-0.31.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/args-1.4.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/async-2.0.6/lib" />
@@ -417,6 +423,8 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/crypto-2.0.2+1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/csslib-0.14.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-0.1.2/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/fluttery-0.0.3/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/fluttery_audio-0.0.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/front_end-0.1.0-alpha.9/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/glob-1.1.5/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/html-0.13.3/lib" />

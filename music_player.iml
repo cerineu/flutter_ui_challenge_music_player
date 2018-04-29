@@ -9,6 +9,17 @@
       <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/audioplayer/build" />
       <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/audioplayer/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/audioplayer/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttery_audio/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttery_audio/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttery_audio/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttery_audio/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttery_audio/example/ios/Flutter/flutter_assets/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttery_audio/example/ios/Pods/.symlinks/plugins/fluttery_audio/example/build/app/intermediates/assets/debug/flutter_assets/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttery_audio/example/ios/Pods/.symlinks/plugins/fluttery_audio/example/build/app/intermediates/flutter/debug/flutter_assets/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttery_audio/example/ios/Pods/.symlinks/plugins/fluttery_audio/example/build/flutter_assets/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttery_audio/example/ios/Pods/.symlinks/plugins/fluttery_audio/example/build/ios/Debug-iphonesimulator/Runner.app/flutter_assets/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttery_audio/example/ios/Pods/.symlinks/plugins/fluttery_audio/example/build/ios/iphonesimulator/Runner.app/flutter_assets/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttery_audio/example/ios/Pods/.symlinks/plugins/fluttery_audio/example/ios/Flutter/flutter_assets/packages" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Dart SDK" level="project" />

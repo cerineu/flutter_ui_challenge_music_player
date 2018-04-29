@@ -95,14 +95,19 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fluttery:
+    dependency: "direct main"
+    description:
+      name: fluttery
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   fluttery_audio:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: bd75ab83f360920337cdecf00cb5eb994a100f15
-      url: "git://github.com/matthew-carroll/fluttery_audio.git"
-    source: git
+      name: fluttery_audio
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.0.1"
   front_end:
     dependency: transitive
@@ -397,4 +402,5 @@ packages:
     source: hosted
     version: "2.1.13"
 sdks:
-  dart: ">=2.0.0-dev.28.0 <=2.0.0-edge.c080951d45e79cd25df98036c4be835b284a269c"
+  dart: ">=2.0.0-dev.28.0 <=2.0.0-edge.0d5cf900b021bf5c9fa593ffa12b15bcd1cc5fe0"
+  flutter: ">=0.1.4 <2.0.0"
