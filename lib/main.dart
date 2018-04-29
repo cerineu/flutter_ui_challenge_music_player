@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:music_player/songs.dart';
 import 'package:music_player/theme.dart';
+import 'package:fluttery/gestures.dart';
 
 void main() => runApp(new MyApp());
 
@@ -63,6 +64,35 @@ class MusicPlayer extends StatefulWidget {
 }
 
 class _MusicPlayerState extends State<MusicPlayer> {
+
+  double _seekPercent = 0.25;
+  PolarCoord _startDragCoord;
+  double _startDragPercent;
+  double _currentDragPercent;
+
+  void _onDragStart(PolarCoord startCoord) {
+    print('start drag');
+    _startDragCoord = startCoord;
+    _startDragPercent = _seekPercent;
+  }
+
+  void _onDragUpdate(PolarCoord updateCoord) {
+    print('update drag');
+    final dragAngle = updateCoord.angle - _startDragCoord.angle;
+    final dragPercent = dragAngle / (2 * pi);
+
+    setState(() => _currentDragPercent = (_startDragPercent + dragPercent) % 1.0);
+  }
+
+  void _onDragEnd() {
+    setState(() {
+      _seekPercent = _currentDragPercent;
+      _currentDragPercent = null;
+      _startDragCoord = null;
+      _startDragPercent = 0.0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Center(
@@ -70,32 +100,42 @@ class _MusicPlayerState extends State<MusicPlayer> {
         children: <Widget>[
           // Seek bar and album art
           new Expanded(
-            child: new Center(
+            child: new RadialDragGestureDetector(
+              onRadialDragStart: _onDragStart,
+              onRadialDragUpdate: _onDragUpdate,
+              onRadialDragEnd: _onDragEnd,
               child: new Container(
-                width: 140.0,
-                height: 140.0,
-                child: new RadialSeekBar(
-                  progress: 0.25,
-                  thumbPosition: 0.25,
-                  trackWidth: 3.0,
-                  trackColor: const Color(0xFFDDDDDD),
-                  progressWidth: 6.0,
-                  progressColor: accentColor,
-                  thumbColor: lightAccentColor,
-                  thumbSize: 10.0,
-                  innerPadding: const EdgeInsets.all(10.0),
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.transparent,
+                child: new Center(
                   child: new Container(
-                    decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: accentColor,
-                    ),
-                    child: new ClipOval(
-                      clipper: new CircleClipper(),
-                      child: new Image.network(
-                        demoPlaylist.songs[0].albumArtUrl,
-                        fit: BoxFit.cover,
+                    width: 140.0,
+                    height: 140.0,
+                    child: new RadialSeekBar(
+                      progress: _currentDragPercent ?? _seekPercent,
+                      thumbPosition: _currentDragPercent ?? _seekPercent,
+                      trackWidth: 3.0,
+                      trackColor: const Color(0xFFDDDDDD),
+                      progressWidth: 6.0,
+                      progressColor: accentColor,
+                      thumbColor: lightAccentColor,
+                      thumbSize: 10.0,
+                      innerPadding: const EdgeInsets.all(10.0),
+                      child: new Container(
+                        decoration: new BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: accentColor,
+                        ),
+                        child: new ClipOval(
+                          clipper: new CircleClipper(),
+                          child: new Image.network(
+                            demoPlaylist.songs[0].albumArtUrl,
+                            fit: BoxFit.cover,
+                          ),
+                        )
                       ),
-                    )
+                    ),
                   ),
                 ),
               ),
