@@ -7,9 +7,15 @@ import 'package:music_player/theme.dart';
 
 class RadialSeekBar extends StatefulWidget {
 
+  final double progress;
+  final Function(double) onSeekRequested;
+  final double seekPercent;
   final Widget child;
 
   RadialSeekBar({
+    this.progress = 0.0,
+    this.onSeekRequested,
+    this.seekPercent,
     this.child,
   });
 
@@ -21,15 +27,28 @@ class RadialSeekBar extends StatefulWidget {
 
 class RadialSeekBarState extends State<RadialSeekBar> {
 
-  double _seekPercent = 0.25;
+  double _progress;
   PolarCoord _startDragCoord;
   double _startDragPercent;
   double _currentDragPercent;
 
+  @override
+  void initState() {
+    super.initState();
+    _progress = widget.progress;
+  }
+
+
+  @override
+  void didUpdateWidget(RadialSeekBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _progress = widget.progress;
+  }
+
   void _onDragStart(PolarCoord startCoord) {
     print('start drag');
     _startDragCoord = startCoord;
-    _startDragPercent = _seekPercent;
+    _startDragPercent = _progress;
   }
 
   void _onDragUpdate(PolarCoord updateCoord) {
@@ -37,12 +56,17 @@ class RadialSeekBarState extends State<RadialSeekBar> {
     final dragAngle = updateCoord.angle - _startDragCoord.angle;
     final dragPercent = dragAngle / (2 * pi);
 
-    setState(() => _currentDragPercent = (_startDragPercent + dragPercent) % 1.0);
+    setState(() {
+      _currentDragPercent = (_startDragPercent + dragPercent) % 1.0;
+    });
   }
 
   void _onDragEnd() {
+    if (widget.onSeekRequested != null) {
+      widget.onSeekRequested(_currentDragPercent);
+    }
+
     setState(() {
-      _seekPercent = _currentDragPercent;
       _currentDragPercent = null;
       _startDragCoord = null;
       _startDragPercent = 0.0;
@@ -51,6 +75,13 @@ class RadialSeekBarState extends State<RadialSeekBar> {
 
   @override
   Widget build(BuildContext context) {
+    double thumbPosition = _progress;
+    if (_currentDragPercent != null) {
+      thumbPosition = _currentDragPercent;
+    } else if (widget.seekPercent != null) {
+      thumbPosition = widget.seekPercent;
+    }
+
     return new RadialDragGestureDetector(
       onRadialDragStart: _onDragStart,
       onRadialDragUpdate: _onDragUpdate,
@@ -64,8 +95,8 @@ class RadialSeekBarState extends State<RadialSeekBar> {
             width: 140.0,
             height: 140.0,
             child: new RadialProgressBar(
-              progress: _currentDragPercent ?? _seekPercent,
-              thumbPosition: _currentDragPercent ?? _seekPercent,
+              progress: _progress,
+              thumbPosition: thumbPosition,
               trackWidth: 3.0,
               trackColor: const Color(0xFFDDDDDD),
               progressWidth: 6.0,
