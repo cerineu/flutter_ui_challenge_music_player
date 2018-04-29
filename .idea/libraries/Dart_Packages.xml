@@ -107,6 +107,13 @@
             </list>
           </value>
         </entry>
+        <entry key="fluttery_audio">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/fluttery_audio-0.0.1/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="front_end">
           <value>
             <list>
@@ -417,6 +424,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/csslib-0.14.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-0.1.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/fluttery-0.0.5/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/fluttery_audio-0.0.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/front_end-0.1.0-alpha.9/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/glob-1.1.5/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/html-0.13.3/lib" />

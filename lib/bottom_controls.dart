@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttery_audio/fluttery_audio.dart';
 import 'package:music_player/theme.dart';
 
 class BottomControls extends StatelessWidget {
@@ -73,24 +74,43 @@ class BottomControls extends StatelessWidget {
 class PlayPauseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new RawMaterialButton(
-      shape: new CircleBorder(),
-      fillColor: Colors.white,
-      splashColor: lightAccentColor,
-      highlightColor: lightAccentColor.withAlpha(0x88),
-      elevation: 10.0,
-      highlightElevation: 5.0,
-      onPressed: () {
-        // TODO:
+    return new AudioComponent(
+      updateMe: [
+        WatchableAudioProperties.audioPlayerState,
+      ],
+      playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
+        IconData icon = Icons.music_note;
+        Function onPressed;
+        Color buttonColor = lightAccentColor;
+
+        if (player.state == AudioPlayerState.playing) {
+          icon = Icons.pause;
+          onPressed = player.pause;
+          buttonColor = Colors.white;
+        } else if (player.state == AudioPlayerState.paused) {
+          icon = Icons.play_arrow;
+          onPressed = player.play;
+          buttonColor = Colors.white;
+        }
+
+        return new RawMaterialButton(
+          shape: new CircleBorder(),
+          fillColor: buttonColor,
+          splashColor: lightAccentColor,
+          highlightColor: lightAccentColor.withAlpha(0x88),
+          elevation: 10.0,
+          highlightElevation: 5.0,
+          onPressed: onPressed,
+          child: new Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: new Icon(
+              icon,
+              color: darkAccentColor,
+              size: 35.0,
+            ),
+          ),
+        );
       },
-      child: new Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: new Icon(
-          Icons.play_arrow,
-          color: darkAccentColor,
-          size: 35.0,
-        ),
-      ),
     );
   }
 }

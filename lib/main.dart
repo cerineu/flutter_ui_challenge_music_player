@@ -1,12 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:music_player/bottom_controls.dart';
 import 'package:music_player/songs.dart';
 import 'package:music_player/theme.dart';
-import 'package:fluttery/gestures.dart';
 import 'package:music_player/top_controls.dart';
+import 'package:fluttery_audio/fluttery_audio.dart';
 
 void main() => runApp(new MyApp());
 
@@ -69,31 +66,35 @@ class _MusicPlayerState extends State<MusicPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return new Center(
-      child: new Column(
-        children: <Widget>[
-          // Seek bar and album art
-          new Expanded(
-            child: new RadialSeekBar(
-              child: new Container(
-                color: accentColor,
-                child: new Image.network(
-                  demoPlaylist.songs[0].albumArtUrl,
-                  fit: BoxFit.cover,
+    return new Audio(
+      audioUrl: demoPlaylist.songs[0].audioUrl,
+      playbackState: PlaybackState.paused,
+      child: new Center(
+        child: new Column(
+          children: <Widget>[
+            // Seek bar and album art
+            new Expanded(
+              child: new RadialSeekBar(
+                child: new Container(
+                  color: accentColor,
+                  child: new Image.network(
+                    demoPlaylist.songs[0].albumArtUrl,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
-          ),
 
-          // Visualizer
-          new Container(
-            width: double.infinity,
-            height: 125.0,
-          ),
+            // Visualizer
+            new Container(
+              width: double.infinity,
+              height: 125.0,
+            ),
 
-          // Song title, artist name, playback controls
-          new BottomControls()
-        ],
+            // Song title, artist name, playback controls
+            new BottomControls()
+          ],
+        ),
       ),
     );
   }
