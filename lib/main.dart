@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluttery_audio/fluttery_audio.dart';
 import 'package:music_player/bottom_controls.dart';
 import 'package:music_player/songs.dart';
-import 'package:music_player/theme.dart';
 import 'package:music_player/top_controls.dart';
-import 'package:fluttery_audio/fluttery_audio.dart';
 
 void main() => runApp(new MyApp());
 
@@ -64,8 +63,6 @@ class MusicPlayer extends StatefulWidget {
 
 class _MusicPlayerState extends State<MusicPlayer> {
 
-  double _seekPercent;
-
   @override
   Widget build(BuildContext context) {
     return new Audio(
@@ -76,38 +73,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
           children: <Widget>[
             // Seek bar and album art
             new Expanded(
-              child: new AudioComponent(
-                updateMe: [
-                  WatchableAudioProperties.audioPlayhead,
-                  WatchableAudioProperties.audioSeeking,
-                ],
-                playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
-                  double playbackProgress = 0.0;
-                  if (player.audioLength != null && player.position != null) {
-                    playbackProgress = player.position.inMilliseconds / player.audioLength.inMilliseconds;
-                  }
-
-                  _seekPercent = player.isSeeking ? _seekPercent : null;
-
-                  return new RadialSeekBar(
-                    progress: playbackProgress,
-                    seekPercent: _seekPercent,
-                    onSeekRequested: (double seekPercent) {
-                      setState(() => _seekPercent = seekPercent);
-
-                      final seekMillis = (player.audioLength.inMilliseconds * seekPercent).round();
-                      player.seek(new Duration(milliseconds: seekMillis));
-                    },
-                    child: new Container(
-                      color: accentColor,
-                      child: new Image.network(
-                        demoPlaylist.songs[0].albumArtUrl,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
-                },
-              ),
+              child: new AudioRadialSeekBar(),
             ),
 
             // Visualizer

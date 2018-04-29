@@ -2,8 +2,61 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:fluttery/gestures.dart';
+import 'package:fluttery_audio/fluttery_audio.dart';
 import 'package:meta/meta.dart';
+import 'package:music_player/songs.dart';
 import 'package:music_player/theme.dart';
+
+class AudioRadialSeekBar extends StatefulWidget {
+
+  AudioRadialSeekBar();
+
+  @override
+  AudioRadialSeekBarState createState() {
+    return new AudioRadialSeekBarState();
+  }
+}
+
+class AudioRadialSeekBarState extends State<AudioRadialSeekBar> {
+
+  double _seekPercent;
+
+  @override
+  Widget build(BuildContext context) {
+    return new AudioComponent(
+      updateMe: [
+        WatchableAudioProperties.audioPlayhead,
+        WatchableAudioProperties.audioSeeking,
+      ],
+      playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
+        double playbackProgress = 0.0;
+        if (player.audioLength != null && player.position != null) {
+          playbackProgress = player.position.inMilliseconds / player.audioLength.inMilliseconds;
+        }
+
+        _seekPercent = player.isSeeking ? _seekPercent : null;
+
+        return new RadialSeekBar(
+          progress: playbackProgress,
+          seekPercent: _seekPercent,
+          onSeekRequested: (double seekPercent) {
+            setState(() => _seekPercent = seekPercent);
+
+            final seekMillis = (player.audioLength.inMilliseconds * seekPercent).round();
+            player.seek(new Duration(milliseconds: seekMillis));
+          },
+          child: new Container(
+            color: accentColor,
+            child: new Image.network(
+              demoPlaylist.songs[0].albumArtUrl,
+              fit: BoxFit.cover,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
 
 class RadialSeekBar extends StatefulWidget {
 
@@ -46,13 +99,11 @@ class RadialSeekBarState extends State<RadialSeekBar> {
   }
 
   void _onDragStart(PolarCoord startCoord) {
-    print('start drag');
     _startDragCoord = startCoord;
     _startDragPercent = _progress;
   }
 
   void _onDragUpdate(PolarCoord updateCoord) {
-    print('update drag');
     final dragAngle = updateCoord.angle - _startDragCoord.angle;
     final dragPercent = dragAngle / (2 * pi);
 
