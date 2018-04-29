@@ -65,6 +65,54 @@ class MusicPlayer extends StatefulWidget {
 
 class _MusicPlayerState extends State<MusicPlayer> {
 
+  @override
+  Widget build(BuildContext context) {
+    return new Center(
+      child: new Column(
+        children: <Widget>[
+          // Seek bar and album art
+          new Expanded(
+            child: new RadialSeekBar(
+              child: new Container(
+                color: accentColor,
+                child: new Image.network(
+                  demoPlaylist.songs[0].albumArtUrl,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+
+          // Visualizer
+          new Container(
+            width: double.infinity,
+            height: 125.0,
+          ),
+
+          // Song title, artist name, playback controls
+          new BottomControls()
+        ],
+      ),
+    );
+  }
+}
+
+class RadialSeekBar extends StatefulWidget {
+
+  final Widget child;
+
+  RadialSeekBar({
+    this.child,
+  });
+
+  @override
+  RadialSeekBarState createState() {
+    return new RadialSeekBarState();
+  }
+}
+
+class RadialSeekBarState extends State<RadialSeekBar> {
+
   double _seekPercent = 0.25;
   PolarCoord _startDragCoord;
   double _startDragPercent;
@@ -95,68 +143,41 @@ class _MusicPlayerState extends State<MusicPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return new Center(
-      child: new Column(
-        children: <Widget>[
-          // Seek bar and album art
-          new Expanded(
-            child: new RadialDragGestureDetector(
-              onRadialDragStart: _onDragStart,
-              onRadialDragUpdate: _onDragUpdate,
-              onRadialDragEnd: _onDragEnd,
-              child: new Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: Colors.transparent,
-                child: new Center(
-                  child: new Container(
-                    width: 140.0,
-                    height: 140.0,
-                    child: new RadialSeekBar(
-                      progress: _currentDragPercent ?? _seekPercent,
-                      thumbPosition: _currentDragPercent ?? _seekPercent,
-                      trackWidth: 3.0,
-                      trackColor: const Color(0xFFDDDDDD),
-                      progressWidth: 6.0,
-                      progressColor: accentColor,
-                      thumbColor: lightAccentColor,
-                      thumbSize: 10.0,
-                      innerPadding: const EdgeInsets.all(10.0),
-                      child: new Container(
-                        decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: accentColor,
-                        ),
-                        child: new ClipOval(
-                          clipper: new CircleClipper(),
-                          child: new Image.network(
-                            demoPlaylist.songs[0].albumArtUrl,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      ),
-                    ),
-                  ),
-                ),
+    return new RadialDragGestureDetector(
+      onRadialDragStart: _onDragStart,
+      onRadialDragUpdate: _onDragUpdate,
+      onRadialDragEnd: _onDragEnd,
+      child: new Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.transparent,
+        child: new Center(
+          child: new Container(
+            width: 140.0,
+            height: 140.0,
+            child: new RadialProgressBar(
+              progress: _currentDragPercent ?? _seekPercent,
+              thumbPosition: _currentDragPercent ?? _seekPercent,
+              trackWidth: 3.0,
+              trackColor: const Color(0xFFDDDDDD),
+              progressWidth: 6.0,
+              progressColor: accentColor,
+              thumbColor: lightAccentColor,
+              thumbSize: 10.0,
+              innerPadding: const EdgeInsets.all(10.0),
+              child: new ClipOval(
+                clipper: new CircleClipper(),
+                child: widget.child,
               ),
             ),
           ),
-
-          // Visualizer
-          new Container(
-            width: double.infinity,
-            height: 125.0,
-          ),
-
-          // Song title, artist name, playback controls
-          new BottomControls()
-        ],
+        ),
       ),
     );
   }
 }
 
-class RadialSeekBar extends StatefulWidget {
+class RadialProgressBar extends StatefulWidget {
 
   final double progress; // [0.0, 1.0]
   final double thumbPosition; // [0.0, 1.0]
@@ -170,7 +191,7 @@ class RadialSeekBar extends StatefulWidget {
   final EdgeInsets innerPadding;
   final Widget child;
 
-  RadialSeekBar({
+  RadialProgressBar({
     this.progress = 0.0,
     this.thumbPosition = 0.0,
     this.trackColor = Colors.grey,
@@ -188,7 +209,7 @@ class RadialSeekBar extends StatefulWidget {
   _RadialSeekBarState createState() => new _RadialSeekBarState();
 }
 
-class _RadialSeekBarState extends State<RadialSeekBar> {
+class _RadialSeekBarState extends State<RadialProgressBar> {
 
   EdgeInsets _insetsForPainter() {
     // Make room for the painted track, progress, and thumb. We divide by
